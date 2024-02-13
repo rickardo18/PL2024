@@ -1,5 +1,5 @@
 import sys
-import os
+import io
 
 def athleteDistr(data):
     len_data = len(data)
@@ -68,27 +68,24 @@ def printSports(ordered_sports):
         i += 1
 
 def main():
-    current_directory = os.path.dirname(__file__)
-    csv_file_path = os.path.join(current_directory, 'emd.csv')
 
     # Define an empty list to store the dictionaries
     data = []
 
-    # Open the CSV file and read its contents
-    with open('emd.csv', 'r', encoding='utf-8') as file:
-        # Read the header line to get column names
-        headers = file.readline().strip().split(',')
+    # Read the header line to get column names
+    stdin_wrapper = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+    headers = stdin_wrapper.readline().strip().split(',')
 
-        # Iterate over each line in the file
-        for line in file:
-            # Split the line into values
-            values = line.strip().split(',')
-            
-            # Create a dictionary for the current row
-            row_dict = dict(zip(headers, values))
-            
-            # Append the row (dictionary) to the data list
-            data.append(row_dict)
+    # Iterate over each line in the input (sys.stdin)
+    for line in stdin_wrapper:
+        # Split the line into values
+        values = line.strip().split(',')
+        
+        # Create a dictionary for the current row
+        row_dict = dict(zip(headers, values))
+        
+        # Append the row (dictionary) to the data list
+        data.append(row_dict)
 
     # Call the sportsOrdered function
     ordered_sports = sportsOrdered(data)
@@ -97,7 +94,7 @@ def main():
     printSports(ordered_sports)
 
     print()
-    # Call able athlets function
+    # Call able athletes function
     ableAthletes(data)
 
     # Distribuição de atletas por escalão etário (escalão = intervalo de 5 anos)
@@ -107,3 +104,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#$ cat emd.csv | python3 tp1.py
